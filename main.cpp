@@ -8,31 +8,13 @@ using namespace std;
 class Solution {
  public:
   int maxProfit(vector<int> &prices) {
-    int max_profit = 0;
-    if (not prices.empty()) {
-      auto[buy, sell, profit] = _maxProfit(prices.begin(), prices.end());
-      max_profit = profit;
-      while (prices.begin() != buy) {
-        tie(buy, sell, profit) = _maxProfit(prices.begin(), buy);
-        max_profit = max(profit, max_profit);
-      }
+    int max_profit = 0, min_price = prices[0];
+    for (size_t i = 1; i < prices.size(); ++i) {
+      max_profit = max(prices[i] - min_price, max_profit);
+      min_price = min(prices[i], min_price);
     }
 
     return max_profit;
-  }
-
- private:
-  template<class Iter>
-  tuple<Iter, Iter, int> _maxProfit(Iter begin, Iter end) {
-    auto buy = min_element(begin, end);
-    if (end != buy) {
-      auto sell = max_element(next(buy), end);
-      if (end != sell) {
-        return {buy, sell, *sell - *buy};
-      }
-    }
-
-    return {buy, buy, 0};
   }
 };
 
